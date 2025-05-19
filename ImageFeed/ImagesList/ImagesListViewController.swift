@@ -64,11 +64,6 @@ extension ImagesListViewController: UITableViewDataSource {
         cell.labelViewCell.textColor = .white
         cell.labelViewCell.font = .systemFont(ofSize: 13, weight: .bold)
         
-        let blurEffect = UIBlurEffect(style: .systemThinMaterial)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.contentView.addSubview(cell.labelViewCell)
-        cell.contentView.addSubview(blurView)
-        
         guard let image = UIImage(named: "\(indexPath.row)") else { return }
         cell.imageViewCell.image = image
         
