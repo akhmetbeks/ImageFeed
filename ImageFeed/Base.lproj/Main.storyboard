@@ -204,17 +204,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JaH-9R-0u2">
-                                <rect key="frame" x="8" y="67" width="48" height="48"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="48" id="VR1-t5-b2H"/>
-                                    <constraint firstAttribute="height" constant="48" id="kUO-zC-AvF"/>
-                                </constraints>
-                                <buttonConfiguration key="configuration" style="plain" image="Backward"/>
-                                <connections>
-                                    <action selector="didTapBackButton" destination="YOd-WQ-sCO" eventType="touchUpInside" id="jI6-qh-hUi"/>
-                                </connections>
-                            </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cd6-oI-Rcp">
                                 <rect key="frame" x="-20" y="59" width="433" height="759"/>
                                 <subviews>
@@ -226,15 +215,26 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="bKh-Ho-4P0"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="78E-JF-Hz1"/>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JaH-9R-0u2">
+                                <rect key="frame" x="8" y="67" width="48" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="48" id="VR1-t5-b2H"/>
+                                    <constraint firstAttribute="height" constant="48" id="kUO-zC-AvF"/>
+                                </constraints>
+                                <buttonConfiguration key="configuration" style="plain" image="Backward"/>
+                                <connections>
+                                    <action selector="didTapBackButton" destination="YOd-WQ-sCO" eventType="touchUpInside" id="jI6-qh-hUi"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bRj-Fv-K2d"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="Cd6-oI-Rcp" firstAttribute="top" secondItem="bRj-Fv-K2d" secondAttribute="top" id="4kq-lv-Xr8"/>
+                            <constraint firstItem="Cd6-oI-Rcp" firstAttribute="top" secondItem="tWu-8q-rRx" secondAttribute="top" id="4kq-lv-Xr8"/>
                             <constraint firstItem="JaH-9R-0u2" firstAttribute="top" secondItem="bRj-Fv-K2d" secondAttribute="top" constant="8" id="8Iv-LG-pJk"/>
-                            <constraint firstItem="bRj-Fv-K2d" firstAttribute="trailing" secondItem="Cd6-oI-Rcp" secondAttribute="trailingMargin" constant="12" id="9Ty-bX-AM7"/>
-                            <constraint firstItem="Cd6-oI-Rcp" firstAttribute="leadingMargin" secondItem="bRj-Fv-K2d" secondAttribute="leading" constant="-12" id="Bz0-yM-6RS"/>
-                            <constraint firstItem="bRj-Fv-K2d" firstAttribute="bottom" secondItem="Cd6-oI-Rcp" secondAttribute="bottom" id="DuU-ix-kQa"/>
+                            <constraint firstItem="bRj-Fv-K2d" firstAttribute="trailing" secondItem="Cd6-oI-Rcp" secondAttribute="trailing" id="9Ty-bX-AM7"/>
+                            <constraint firstItem="Cd6-oI-Rcp" firstAttribute="leading" secondItem="bRj-Fv-K2d" secondAttribute="leading" id="Bz0-yM-6RS"/>
+                            <constraint firstAttribute="bottom" secondItem="Cd6-oI-Rcp" secondAttribute="bottom" id="DuU-ix-kQa"/>
                             <constraint firstItem="JaH-9R-0u2" firstAttribute="leading" secondItem="bRj-Fv-K2d" secondAttribute="leading" constant="8" id="ycP-lf-J3B"/>
                         </constraints>
                     </view>
