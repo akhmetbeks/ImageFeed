@@ -13,7 +13,7 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
             guard isViewLoaded else { return }
             if let image {
                 imageView.image = image
-                imageView.frame.size = image.size
+//                imageView.frame.size = image.size
                 rescaleAndCenterImageInScrollView(image: image)
             }
         }
@@ -39,6 +39,24 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         dismiss(animated: true, completion: nil)
     }
     
+    @IBAction private func didTapShareButton() {
+        let activity = UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil)
+        
+        present(activity, animated: true)
+    }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        if let image {
+            rescaleAndCenterImageInScrollView(image: image)
+        }
+    }
+    
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
@@ -54,9 +72,5 @@ final class SingleImageViewController: UIViewController, UIScrollViewDelegate {
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
-    }
-    
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
     }
 }
