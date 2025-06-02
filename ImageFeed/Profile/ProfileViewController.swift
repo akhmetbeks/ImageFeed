@@ -7,36 +7,52 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
-    override func viewDidLoad() {
+final class ProfileViewController: UIViewController {
+    private let profileImage: UIImageView = {
         let profileImage = UIImageView(image: UIImage(named: "ProfilePhoto"))
         profileImage.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(profileImage)
-        
+        return profileImage
+    }()
+    
+    private let button: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "Exit"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(button)
-        
+        return button
+    }()
+    
+    private let label1: UILabel = {
         let label1 = UILabel()
         label1.text = "Екатерина Новикова"
         label1.font = .systemFont(ofSize: 23, weight: .bold)
         label1.textColor = .ypWhite
         label1.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label1)
-        
+        return label1
+    }()
+    
+    private let label2: UILabel = {
         let label2 = UILabel()
         label2.text = "@ekaterina_nov"
         label2.font = .systemFont(ofSize: 13, weight: .regular)
         label2.textColor = .ypWhite
         label2.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label2)
-        
+        return label2
+    }()
+    
+    private let label3: UILabel = {
         let label3 = UILabel()
         label3.text = "Hello, world!"
         label3.font = .systemFont(ofSize: 13, weight: .regular)
         label3.textColor = .ypWhite
         label3.translatesAutoresizingMaskIntoConstraints = false
+        return label3
+    }()
+    
+    override func viewDidLoad() {
+        view.addSubview(profileImage)
+        view.addSubview(button)
+        view.addSubview(label1)
+        view.addSubview(label2)
         view.addSubview(label3)
         
         NSLayoutConstraint.activate([
