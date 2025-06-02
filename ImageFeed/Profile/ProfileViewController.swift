@@ -61,12 +61,15 @@ final class ProfileViewController: UIViewController {
             
             label1.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 8),
             label1.leadingAnchor.constraint(equalTo: profileImage.leadingAnchor),
+            label1.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
             label2.topAnchor.constraint(equalTo: label1.bottomAnchor, constant: 8),
             label2.leadingAnchor.constraint(equalTo: profileImage.leadingAnchor),
+            label2.trailingAnchor.constraint(equalTo: label1.trailingAnchor),
             
             label3.topAnchor.constraint(equalTo: label2.bottomAnchor, constant: 8),
             label3.leadingAnchor.constraint(equalTo: profileImage.leadingAnchor),
+            label3.trailingAnchor.constraint(equalTo: label1.trailingAnchor),
             
             button.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor),
             button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
