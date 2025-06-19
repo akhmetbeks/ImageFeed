@@ -31,16 +31,6 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         window.rootViewController = tabBarController
     }
     
-    private func switchToAuthViewController() {
-        guard let window = UIApplication.shared.windows.first else {
-            return
-        }
-        
-        let authController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "AuthViewController")
-        
-        window.rootViewController = authController
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showAuthIdentifier {
             guard
