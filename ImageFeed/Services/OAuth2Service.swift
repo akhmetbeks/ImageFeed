@@ -8,6 +8,7 @@
 import Foundation
 
 final class OAuth2Service {
+    private let decoder = JSONDecoder()
     static let shared = OAuth2Service()
     
     private init() {}
@@ -35,7 +36,7 @@ final class OAuth2Service {
             switch result {
             case .success(let data):
                 do {
-                    let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                    let tokenResponse = try self.decoder.decode(OAuthTokenResponseBody.self, from: data)
                     completion(.success(tokenResponse.accessToken))
                 } catch {
                     print(error.localizedDescription)
