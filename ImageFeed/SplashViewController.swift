@@ -16,7 +16,7 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
         if storage.token != nil {
             switchToTabBarController()
         } else {
-            switchToAuthViewController()
+            performSegue(withIdentifier: showAuthIdentifier, sender: self)
         }
     }
     
@@ -25,7 +25,8 @@ final class SplashViewController: UIViewController, AuthViewControllerDelegate {
             return
         }
         
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
+        let tabBarController = UIStoryboard(name: "Main", bundle: .main)
+            .instantiateViewController(withIdentifier: "TabBarViewController")
         
         window.rootViewController = tabBarController
     }

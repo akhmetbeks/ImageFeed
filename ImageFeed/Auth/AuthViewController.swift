@@ -50,7 +50,11 @@ extension AuthViewController: WebViewViewControllerDelegate {
             switch result {
             case .success(let token):
                 self.storage.token = token
-                self.delegate?.didAuthenticate(self)
+                guard let delegate = self.delegate else {
+                    return
+                }
+                
+                delegate.didAuthenticate(self)
             case .failure(let error):
                 print("Error:")
                 print(error.localizedDescription)
