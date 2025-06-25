@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -17,6 +16,7 @@ final class AuthViewController: UIViewController {
     let oauth2Service = OAuth2Service.shared
     let storage = OAuth2TokenStorage()
     weak var delegate: AuthViewControllerDelegate?
+    private let uiBlockingProgressHUD = UIBlockingProgressHUD()
     
     override func viewDidLoad() {
         configureBackButton()
@@ -27,6 +27,14 @@ final class AuthViewController: UIViewController {
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP Black")
+    }
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так", message: "Не удалось войти в систему", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ок", style: .cancel)
+        
+        alert.addAction(action)
+        present(alert, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -48,17 +56,18 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController,
                                didAuthenticateWithCode code: String) {
+        self.uiBlockingProgressHUD.show()
+        
         oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
-            ProgressHUD.animate()
+            self?.uiBlockingProgressHUD.dismiss()
             switch result {
             case .success(let token):
                 guard let self else {   return  }
                 self.storage.token = token
-                ProgressHUD.dismiss()
                 guard let delegate = self.delegate else {   return  }
                 delegate.didAuthenticate(self)
             case .failure(let error):
-                print("Error:")
+                self?.showAlert()
                 print(error.localizedDescription)
             }
         }
