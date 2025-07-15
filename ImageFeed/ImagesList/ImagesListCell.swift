@@ -13,4 +13,8 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet var buttonCell: UIButton!
     
     static let reuseIdentifier = "ImagesListCell"
+    
+    override func prepareForReuse() {
+        
+    }
 }

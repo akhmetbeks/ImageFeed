@@ -13,6 +13,7 @@ final class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    private var photos: [Photo] = []
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -24,6 +25,8 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        
+        imagesListService.fetchPhotosNextPage()
         
         NotificationCenter.default.addObserver(
             forName: ImagesListService.didChangeNotification,
@@ -50,7 +53,12 @@ final class ImagesListViewController: UIViewController {
     }
     
     private func updateImagesList() {
-        imagesListService.photos
+        photos = imagesListService.photos
+        tableView.performBatchUpdates {
+            for index in photos.indices {
+                self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            }
+        }
     }
 }
 
@@ -74,6 +82,7 @@ extension ImagesListViewController: UITableViewDelegate {
 
 // MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         photosName.count
     }

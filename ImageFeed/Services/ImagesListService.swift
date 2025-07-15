@@ -28,7 +28,7 @@ final class ImagesListService {
         let nextPage = (lastLoadedPage ?? 0) + 1
         let baseURL = URL(string: "https://api.unsplash.com")
         let url = URL(
-            string: "/photos/page=\(nextPage)",
+            string: "/photos?page=\(nextPage)",
             relativeTo: baseURL
         )!
         var request = URLRequest(url: url)
@@ -44,6 +44,8 @@ final class ImagesListService {
             return
         }
         
+        print("token: \(token)")
+        
         let url = makeRequest(accessToken: token)
         
         let task = URLSession.shared.objectTask(request: url) { [weak self] (result: Result<[PhotoResult], Error>) in
@@ -54,7 +56,7 @@ final class ImagesListService {
                         return Photo(
                             id: i.id,
                             size: CGSize(width: i.width, height: i.height),
-                            createdAt: self?.dateFormatter.date(from: i.createdAt),
+                            createdAt: self?.dateFormatter.date(from: i.createdAt ?? ""),
                             welcomeDescription: i.description,
                             thumbImageURL: i.urls.thumb,
                             largeImageURL: i.urls.full,
@@ -68,6 +70,8 @@ final class ImagesListService {
                         object: self)
                 }
             case .failure(let error):
+                print("[fetchPhotosNextPage]: \(error.localizedDescription)")
+                return
             }
             
             self?.task = nil
