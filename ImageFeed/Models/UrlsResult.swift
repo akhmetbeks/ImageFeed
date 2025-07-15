@@ -5,7 +5,7 @@
 //  Created by Sultan Akhmetbek on 13.07.2025.
 //
 
-struct UrlsResult {
+struct UrlsResult: Decodable {
     let raw: String
     let full: String
     let regular: String

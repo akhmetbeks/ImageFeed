@@ -9,7 +9,8 @@ import Foundation
 
 final class ImagesListService {
     private(set) var photos: [Photo] = []
-    private var lastLoadedPage: Int?
+    private var lastLoadedPage: Int = 0
+    private var isProcessing = false
     private var task: URLSessionTask?
     private let decoder = JSONDecoder()
     private let storage = OAuth2TokenStorage()
@@ -25,10 +26,10 @@ final class ImagesListService {
     }()
     
     private func makeRequest(accessToken: String) -> URLRequest {
-        let nextPage = (lastLoadedPage ?? 0) + 1
+        lastLoadedPage += 1
         let baseURL = URL(string: "https://api.unsplash.com")
         let url = URL(
-            string: "/photos/page=\(nextPage)",
+            string: "/photos?page=\(lastLoadedPage)",
             relativeTo: baseURL
         )!
         var request = URLRequest(url: url)
@@ -38,6 +39,8 @@ final class ImagesListService {
      }
     
     func fetchPhotosNextPage() {
+        if isProcessing {   return  }
+        
         task?.cancel()
         
         guard let token = storage.token else {
@@ -68,12 +71,16 @@ final class ImagesListService {
                         object: self)
                 }
             case .failure(let error):
+                print("[fetchPhotosNextPage]: \(error.localizedDescription)")
             }
             
-            self?.task = nil
+            guard let self else { return }
+            self.task = nil
+            self.isProcessing = false
         }
         
         self.task = task
+        self.isProcessing = true
         task.resume()
     }
 }
