@@ -8,11 +8,13 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage?
+    var fullImageUrl: String?
     
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var buttonView: UIButton!
+    
+    private let progress = UIBlockingProgressHUD()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +28,25 @@ final class SingleImageViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if let image {
-            imageView.image = image
-            imageView.frame.size = image.size
-            rescaleAndCenterImageInScrollView(image: image)
+        guard let image = UIImage(named: "Stub") else { return }
+        
+        if let fullImageUrl {
+            guard let url = URL(string: fullImageUrl) else { return }
+            progress.show()
+            imageView.kf.setImage(with: url, placeholder: image) { [weak self] result in
+                    switch result {
+                    case .success(let data):
+                        guard let self else { return }
+                        self.rescaleAndCenterImageInScrollView(image: data.image)
+                        self.progress.dismiss()
+                    case .failure(let error):
+                        guard let self else { return }
+                        print(error.localizedDescription)
+                        self.progress.dismiss()
+                    }
+                    
+                }
+            
         }
     }
     
@@ -38,13 +55,21 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction private func didTapShareButton() {
-        guard let image else {  return  }
+        guard let image = imageView.image else {  return  }
         
         let activity = UIActivityViewController(
             activityItems: [image],
             applicationActivities: nil)
         
         present(activity, animated: true)
+    }
+    
+    private func showError() {
+        let alert = UIAlertController(title: "Что-то пошло не так", message: "Повторить запрос?", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ок", style: .cancel)
+        
+        alert.addAction(action)
+        present(alert, animated: true)
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {

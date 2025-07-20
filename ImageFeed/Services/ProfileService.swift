@@ -29,6 +29,10 @@ final class ProfileService {
         return request
      }
     
+    func cleanProfile() {
+        profile = nil
+    }
+    
     func fetchProfile(token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         if isProcessing {
             completion(.failure(NetworkError.invalidRequest))

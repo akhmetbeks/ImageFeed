@@ -7,8 +7,8 @@
 
 struct PhotoResult: Decodable {
     let id: String
-    let createdAt: String
-    let updatedAt: String
+    let createdAt: String?
+    let updatedAt: String?
     let width: Int
     let height: Int
     let color: String

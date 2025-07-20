@@ -12,7 +12,13 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet var labelViewCell: UILabel!
     @IBOutlet var buttonCell: UIButton!
     
+    @IBAction func likeButtonClicked() {
+        delegate?.imageListCellDidTapLike(self)
+    }
+    
     static let reuseIdentifier = "ImagesListCell"
+    
+    weak var delegate: ImagesListCellDelegate?
     
     override func prepareForReuse() {
         self.imageViewCell.image = nil

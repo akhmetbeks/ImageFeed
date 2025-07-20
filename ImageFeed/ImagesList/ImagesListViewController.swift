@@ -7,12 +7,18 @@
 
 import UIKit
 
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
+
 final class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
     private let imagesListService = ImagesListService.shared
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
+    
+    weak var delegate: ImagesListCellDelegate?
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -45,7 +51,7 @@ final class ImagesListViewController: UIViewController {
                 return
             }
             
-//            destination.image = UIImage(named: photosName[indexPath.row])!
+            destination.fullImageUrl = self.photos[indexPath.row].largeImageURL
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -62,6 +68,34 @@ final class ImagesListViewController: UIViewController {
                tableView.insertRows(at: indexPaths, with: .automatic)
            }
        }
+    }
+}
+
+// MARK: - ImagesListCellDelegate
+extension ImagesListViewController: ImagesListCellDelegate {
+    func setIsLiked(_ cell: ImagesListCell, isLiked: Bool) {
+        cell.buttonCell.setImage(UIImage(named: isLiked ? "Active" : "No Active"), for: .normal)
+    }
+    
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        let photo = photos[indexPath.row]
+        let isLiked = !photo.isLiked
+        
+        let progress = UIBlockingProgressHUD()
+        progress.show()
+        
+        imagesListService.changeLike(id: photo.id, isLike: isLiked) { result in
+            switch result {
+            case .success(_):
+                self.photos = self.imagesListService.photos
+                self.setIsLiked(cell, isLiked: isLiked)
+                progress.dismiss()
+            case .failure(_):
+                progress.dismiss()
+            }
+        }
     }
 }
 
@@ -103,11 +137,15 @@ extension ImagesListViewController: UITableViewDataSource {
         }
         
         configCell(for: imageListCell, with: indexPath)
+        imageListCell.delegate = self
         return imageListCell
     }
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        cell.labelViewCell.text = dateFormatter.string(from: Date())
+        if let date = self.photos[indexPath.row].createdAt {
+            cell.labelViewCell.text = dateFormatter.string(from: date)
+        }
+        
         cell.labelViewCell.textColor = .white
         cell.labelViewCell.font = .systemFont(ofSize: 13, weight: .regular)
         
@@ -127,7 +165,7 @@ extension ImagesListViewController: UITableViewDataSource {
                 }
             }
         
-        let buttonImageName = indexPath.row % 2 == 0 ? "Active" : "No Active"
+        let buttonImageName = self.photos[indexPath.row].isLiked ? "Active" : "No Active"
         cell.buttonCell.setImage(UIImage(named: buttonImageName), for: .normal)
         cell.buttonCell.setTitle(nil, for: .normal)
     }

@@ -31,6 +31,10 @@ final class ProfileImageService {
         return request
      }
     
+    func cleanUserResult() {
+        userResult = nil
+    }
+    
     func fetchAvatarURL(username: String, completion: @escaping (Result<UserResult, Error>) -> Void) {
         if isProcessing {
             completion(.failure(NetworkError.invalidRequest))

@@ -12,13 +12,26 @@ import SwiftKeychainWrapper
 final class ProfileViewController: UIViewController {
     private let service = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let profileLogoutService = ProfileLogoutService.shared
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
-    //TODO: remove before commit
     @objc
     private func buttonTapped() {
+        profileLogoutService.logout()
         KeychainWrapper.standard.remove(forKey: "access_token")
+        
+        switchToSplashController()
+    }
+    
+    private func switchToSplashController() {
+        guard let window = UIApplication.shared.windows.first else {
+            return
+        }
+        
+        let splashController = SplashViewController()
+        
+        window.rootViewController = splashController
     }
     
     private let profileImage: UIImageView = {

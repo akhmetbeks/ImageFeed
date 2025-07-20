@@ -14,29 +14,25 @@ final class ImagesListService {
     private var task: URLSessionTask?
     private let decoder = JSONDecoder()
     private let storage = OAuth2TokenStorage()
+    private let baseURL = URL(string: "https://api.unsplash.com")
     
     static let shared = ImagesListService()
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        return formatter
-    }()
-    
-    private func makeRequest(accessToken: String) -> URLRequest {
-        lastLoadedPage += 1
-        let baseURL = URL(string: "https://api.unsplash.com")
+    private func makeRequest(accessToken: String, url: String, httpMethod: String) -> URLRequest {
         let url = URL(
-            string: "/photos?page=\(lastLoadedPage)",
+            string: url,
             relativeTo: baseURL
         )!
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = httpMethod
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         return request
      }
+    
+    func cleanPhotos() {
+        photos = []
+    }
     
     func fetchPhotosNextPage() {
         if isProcessing {   return  }
@@ -47,17 +43,21 @@ final class ImagesListService {
             return
         }
         
-        let url = makeRequest(accessToken: token)
+        lastLoadedPage += 1
+        let url = makeRequest(accessToken: token, url: "/photos?page=\(lastLoadedPage)", httpMethod: "GET")
         
         let task = URLSession.shared.objectTask(request: url) { [weak self] (result: Result<[PhotoResult], Error>) in
             switch result {
             case .success(let items):
                 DispatchQueue.main.async {
                     let newPhotos = items.map { i in
+                        let dateFormatter = ISO8601DateFormatter()
+                        let date = dateFormatter.date(from: i.createdAt ?? "")
+                        
                         return Photo(
                             id: i.id,
                             size: CGSize(width: i.width, height: i.height),
-                            createdAt: self?.dateFormatter.date(from: i.createdAt),
+                            createdAt: date,
                             welcomeDescription: i.description,
                             thumbImageURL: i.urls.thumb,
                             largeImageURL: i.urls.full,
@@ -72,6 +72,57 @@ final class ImagesListService {
                 }
             case .failure(let error):
                 print("[fetchPhotosNextPage]: \(error.localizedDescription)")
+            }
+            
+            guard let self else { return }
+            self.task = nil
+            self.isProcessing = false
+        }
+        
+        self.task = task
+        self.isProcessing = true
+        task.resume()
+    }
+    
+    func changeLike(id: String, isLike: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        if isProcessing { return }
+        
+        task?.cancel()
+        
+        guard let token = storage.token else {
+            completion(.failure(NetworkError.invalidRequest))
+            return
+        }
+        
+        let url = makeRequest(
+            accessToken: token,
+            url: "/photos/\(id)/like",
+            httpMethod: isLike ? "POST" : "DELETE")
+        
+        let task = URLSession.shared.objectTask(request: url) { [weak self] (result: Result<Empty, Error>) in
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    if let index = self.photos.firstIndex(where: { $0.id == id }) {
+                        let photo = self.photos[index]
+                        
+                        let newPhoto = Photo(
+                            id: photo.id,
+                            size: photo.size,
+                            createdAt: photo.createdAt,
+                            welcomeDescription: photo.welcomeDescription,
+                            thumbImageURL: photo.thumbImageURL,
+                            largeImageURL: photo.largeImageURL,
+                            isLiked: photo.isLiked)
+                        
+                        self.photos[index] = newPhoto
+                    }
+                }
+                completion(.success(()))
+            case .failure(let error):
+                print("[changeLike]: \(error.localizedDescription)")
+                completion(.failure(error))
             }
             
             guard let self else { return }

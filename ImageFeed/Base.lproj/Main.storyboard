@@ -67,6 +67,9 @@
                                                     <rect key="frame" x="341" y="19" width="24" height="14"/>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" title=""/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="dWO-Vo-F0F" eventType="touchUpInside" id="BNT-R8-gKe"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
