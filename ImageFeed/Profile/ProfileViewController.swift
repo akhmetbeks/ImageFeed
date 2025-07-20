@@ -6,8 +6,21 @@
 //
 
 import UIKit
+import Kingfisher
+import SwiftKeychainWrapper
 
 final class ProfileViewController: UIViewController {
+    private let service = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
+    //TODO: remove before commit
+    @objc
+    private func buttonTapped() {
+        KeychainWrapper.standard.remove(forKey: "access_token")
+    }
+    
     private let profileImage: UIImageView = {
         let profileImage = UIImageView(image: UIImage(named: "ProfilePhoto"))
         profileImage.translatesAutoresizingMaskIntoConstraints = false
@@ -18,6 +31,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "Exit"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -49,6 +63,9 @@ final class ProfileViewController: UIViewController {
     }()
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.ypBlack
+        
         view.addSubview(profileImage)
         view.addSubview(button)
         view.addSubview(label1)
@@ -74,5 +91,27 @@ final class ProfileViewController: UIViewController {
             button.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor),
             button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
         ])
+        
+        label1.text = service.profile?.name
+        label2.text = service.profile?.loginName
+        label3.text = service.profile?.bio
+        
+        NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+                self?.updateAvatar()
+            }
+        
+        updateAvatar()
+    }
+    
+    private func updateAvatar() {
+        guard
+            let image = profileImageService.userResult?.profileImage.small,
+            let avatar = URL(string: image)
+        else { return }
+        
+        profileImage.kf.setImage(with: avatar, placeholder: UIImage(named: "ProfilePhoto"))
     }
 }
