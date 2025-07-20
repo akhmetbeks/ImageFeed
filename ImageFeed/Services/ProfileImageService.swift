@@ -9,7 +9,7 @@ import Foundation
 
 final class ProfileImageService {
     private let decoder = JSONDecoder()
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     private var task: URLSessionTask?
     private var isProcessing = false
     private(set) var userResult: UserResult?

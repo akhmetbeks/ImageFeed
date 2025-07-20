@@ -14,6 +14,12 @@ enum NetworkError: Error {
     case invalidRequest
 }
 
+enum HTTPMethod: String {
+    case POST
+    case DELETE
+    case GET
+}
+
 extension URLSession {
     func data(
         for request: URLRequest,

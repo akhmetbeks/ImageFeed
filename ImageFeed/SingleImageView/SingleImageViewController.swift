@@ -34,18 +34,19 @@ final class SingleImageViewController: UIViewController {
             guard let url = URL(string: fullImageUrl) else { return }
             progress.show()
             imageView.kf.setImage(with: url, placeholder: image) { [weak self] result in
-                    switch result {
-                    case .success(let data):
-                        guard let self else { return }
-                        self.rescaleAndCenterImageInScrollView(image: data.image)
-                        self.progress.dismiss()
-                    case .failure(let error):
-                        guard let self else { return }
-                        print(error.localizedDescription)
-                        self.progress.dismiss()
-                    }
-                    
+                switch result {
+                case .success(let data):
+                    guard let self else { return }
+                    self.imageView.frame.size = data.image.size
+                    self.rescaleAndCenterImageInScrollView(image: data.image)
+                    self.progress.dismiss()
+                case .failure(let error):
+                    guard let self else { return }
+                    print(error.localizedDescription)
+                    self.progress.dismiss()
                 }
+                
+            }
             
         }
     }

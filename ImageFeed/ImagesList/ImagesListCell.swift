@@ -12,7 +12,7 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet var labelViewCell: UILabel!
     @IBOutlet var buttonCell: UIButton!
     
-    @IBAction func likeButtonClicked() {
+    @IBAction private func likeButtonClicked() {
         delegate?.imageListCellDidTapLike(self)
     }
     

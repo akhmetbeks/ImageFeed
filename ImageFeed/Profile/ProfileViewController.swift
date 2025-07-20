@@ -18,10 +18,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func buttonTapped() {
-        profileLogoutService.logout()
-        KeychainWrapper.standard.remove(forKey: "access_token")
-        
-        switchToSplashController()
+        showConfirmationAlert()
     }
     
     private func switchToSplashController() {
@@ -32,6 +29,31 @@ final class ProfileViewController: UIViewController {
         let splashController = SplashViewController()
         
         window.rootViewController = splashController
+    }
+    
+    private func onLogout() {
+        profileLogoutService.logout()
+        KeychainWrapper.standard.remove(forKey: "access_token")
+        switchToSplashController()
+    }
+    
+    private func showConfirmationAlert() {
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert
+        )
+
+        let yesAction = UIAlertAction(title: "Да", style: .destructive) { _ in
+            self.onLogout()
+        }
+
+        let noAction = UIAlertAction(title: "Нет", style: .cancel)
+
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+
+        present(alert, animated: true, completion: nil)
     }
     
     private let profileImage: UIImageView = {

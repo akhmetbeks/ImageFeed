@@ -74,7 +74,7 @@ final class ImagesListViewController: UIViewController {
 // MARK: - ImagesListCellDelegate
 extension ImagesListViewController: ImagesListCellDelegate {
     func setIsLiked(_ cell: ImagesListCell, isLiked: Bool) {
-        cell.buttonCell.setImage(UIImage(named: isLiked ? "Active" : "No Active"), for: .normal)
+        cell.buttonCell.setImage(UIImage(resource: isLiked ? .active : .noActive), for: .normal)
     }
     
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
@@ -88,11 +88,11 @@ extension ImagesListViewController: ImagesListCellDelegate {
         
         imagesListService.changeLike(id: photo.id, isLike: isLiked) { result in
             switch result {
-            case .success(_):
+            case .success:
                 self.photos = self.imagesListService.photos
                 self.setIsLiked(cell, isLiked: isLiked)
                 progress.dismiss()
-            case .failure(_):
+            case .failure:
                 progress.dismiss()
             }
         }
@@ -149,21 +149,11 @@ extension ImagesListViewController: UITableViewDataSource {
         cell.labelViewCell.textColor = .white
         cell.labelViewCell.font = .systemFont(ofSize: 13, weight: .regular)
         
-        guard let image = UIImage(named: "Stub") else { return }
-        guard let url = URL(string: photos[indexPath.row].thumbImageURL) else { return }
+        guard let image = UIImage(named: "Stub"),
+              let url = URL(string: photos[indexPath.row].thumbImageURL) else { return }
+
         cell.imageViewCell.kf.indicatorType = .activity
-        cell.imageViewCell.kf.setImage(
-            with: url,
-            placeholder: image) { result in
-                switch result {
-                case .success(_):
-                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
-                    return
-                case .failure(let error):
-                    print("\(error.localizedDescription)")
-                    return
-                }
-            }
+        cell.imageViewCell.kf.setImage(with: url, placeholder: image)
         
         let buttonImageName = self.photos[indexPath.row].isLiked ? "Active" : "No Active"
         cell.buttonCell.setImage(UIImage(named: buttonImageName), for: .normal)

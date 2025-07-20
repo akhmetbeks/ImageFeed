@@ -13,29 +13,22 @@ final class ImagesListService {
     private var isProcessing = false
     private var task: URLSessionTask?
     private let decoder = JSONDecoder()
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     private let baseURL = URL(string: "https://api.unsplash.com")
     
     static let shared = ImagesListService()
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     
-    private func makeRequest(accessToken: String, url: String, httpMethod: String) -> URLRequest {
-        let url = URL(
-            string: url,
-            relativeTo: baseURL
-        )!
-        var request = URLRequest(url: url)
-        request.httpMethod = httpMethod
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        return request
-     }
+    private static let dateFormatter: ISO8601DateFormatter = {
+       ISO8601DateFormatter()
+    }()
     
     func cleanPhotos() {
         photos = []
     }
     
     func fetchPhotosNextPage() {
-        if isProcessing {   return  }
+        guard !isProcessing else { return }
         
         task?.cancel()
         
@@ -44,15 +37,15 @@ final class ImagesListService {
         }
         
         lastLoadedPage += 1
-        let url = makeRequest(accessToken: token, url: "/photos?page=\(lastLoadedPage)", httpMethod: "GET")
+        guard let url = makeRequest(accessToken: token, url: "/photos?page=\(lastLoadedPage)", httpMethod: .GET) else {
+            return
+        }
         
         let task = URLSession.shared.objectTask(request: url) { [weak self] (result: Result<[PhotoResult], Error>) in
             switch result {
             case .success(let items):
-                DispatchQueue.main.async {
                     let newPhotos = items.map { i in
-                        let dateFormatter = ISO8601DateFormatter()
-                        let date = dateFormatter.date(from: i.createdAt ?? "")
+                        let date = ImagesListService.dateFormatter.date(from: i.createdAt ?? "")
                         
                         return Photo(
                             id: i.id,
@@ -69,7 +62,6 @@ final class ImagesListService {
                     NotificationCenter.default.post(
                         name: ImagesListService.didChangeNotification,
                         object: self)
-                }
             case .failure(let error):
                 print("[fetchPhotosNextPage]: \(error.localizedDescription)")
             }
@@ -94,15 +86,13 @@ final class ImagesListService {
             return
         }
         
-        let url = makeRequest(
-            accessToken: token,
-            url: "/photos/\(id)/like",
-            httpMethod: isLike ? "POST" : "DELETE")
+        guard let url = makeRequest(accessToken: token, url: "/photos/\(id)/like", httpMethod: isLike ? .POST : .DELETE) else {
+            return 
+        }
         
         let task = URLSession.shared.objectTask(request: url) { [weak self] (result: Result<Empty, Error>) in
             switch result {
             case .success(_):
-                DispatchQueue.main.async {
                     guard let self else { return }
                     if let index = self.photos.firstIndex(where: { $0.id == id }) {
                         let photo = self.photos[index]
@@ -118,7 +108,6 @@ final class ImagesListService {
                         
                         self.photos[index] = newPhoto
                     }
-                }
                 completion(.success(()))
             case .failure(let error):
                 print("[changeLike]: \(error.localizedDescription)")
@@ -133,5 +122,13 @@ final class ImagesListService {
         self.task = task
         self.isProcessing = true
         task.resume()
+    }
+    
+    private func makeRequest(accessToken: String, url: String, httpMethod: HTTPMethod) -> URLRequest? {
+        guard let url = URL(string: url, relativeTo: baseURL) else { return nil }
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod.rawValue
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        return request
     }
 }
