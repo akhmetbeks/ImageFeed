@@ -49,7 +49,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="ugu-Ns-GNk">
-                                                    <rect key="frame" x="20" y="11" width="353" height="216"/>
+                                                    <rect key="frame" x="20" y="4" width="353" height="230"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="16"/>
@@ -58,25 +58,29 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vyi-Qf-8rt">
-                                                    <rect key="frame" x="28" y="203.33333333333334" width="33" height="15.666666666666657"/>
+                                                    <rect key="frame" x="28" y="210.33333333333334" width="33" height="15.666666666666657"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="YP White"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V11-ot-JF6">
-                                                    <rect key="frame" x="341" y="19" width="24" height="14"/>
+                                                    <rect key="frame" x="321" y="12" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="aqH-h6-oRI"/>
+                                                        <constraint firstAttribute="width" constant="44" id="bu1-At-KPp"/>
+                                                    </constraints>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" title=""/>
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ugu-Ns-GNk" firstAttribute="top" secondItem="CF2-TR-FGh" secondAttribute="topMargin" id="6TS-mS-jo7"/>
+                                                <constraint firstItem="ugu-Ns-GNk" firstAttribute="top" secondItem="CF2-TR-FGh" secondAttribute="top" constant="4" id="6TS-mS-jo7"/>
                                                 <constraint firstItem="ugu-Ns-GNk" firstAttribute="topMargin" secondItem="V11-ot-JF6" secondAttribute="top" id="6zc-Pk-E0k"/>
                                                 <constraint firstItem="ugu-Ns-GNk" firstAttribute="leading" secondItem="CF2-TR-FGh" secondAttribute="leadingMargin" id="Bjj-bo-bZv"/>
                                                 <constraint firstItem="vyi-Qf-8rt" firstAttribute="leading" secondItem="ugu-Ns-GNk" secondAttribute="leading" constant="8" id="DzV-9J-eeM"/>
                                                 <constraint firstItem="V11-ot-JF6" firstAttribute="trailing" secondItem="ugu-Ns-GNk" secondAttribute="trailingMargin" id="bNf-sq-4mL"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="ugu-Ns-GNk" secondAttribute="trailing" id="g7v-Lc-Y9J"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="ugu-Ns-GNk" secondAttribute="bottom" id="jrx-d7-OD5"/>
+                                                <constraint firstAttribute="bottom" secondItem="ugu-Ns-GNk" secondAttribute="bottom" constant="4" id="jrx-d7-OD5"/>
                                                 <constraint firstItem="ugu-Ns-GNk" firstAttribute="bottom" secondItem="vyi-Qf-8rt" secondAttribute="bottom" constant="8" id="s1i-5G-3bh"/>
                                             </constraints>
                                         </tableViewCellContentView>
