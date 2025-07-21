@@ -9,7 +9,7 @@ import Foundation
 
 final class ProfileImageService {
     private let decoder = JSONDecoder()
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     private var task: URLSessionTask?
     private var isProcessing = false
     private(set) var userResult: UserResult?
@@ -30,6 +30,10 @@ final class ProfileImageService {
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         return request
      }
+    
+    func cleanUserResult() {
+        userResult = nil
+    }
     
     func fetchAvatarURL(username: String, completion: @escaping (Result<UserResult, Error>) -> Void) {
         if isProcessing {

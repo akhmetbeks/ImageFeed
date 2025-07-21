@@ -71,6 +71,9 @@
                                                     </constraints>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" title=""/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="dWO-Vo-F0F" eventType="touchUpInside" id="BNT-R8-gKe"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>

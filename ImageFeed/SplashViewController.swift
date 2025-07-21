@@ -10,7 +10,7 @@ import UIKit
 final class SplashViewController: UIViewController, AuthViewControllerDelegate {
     let profileService = ProfileService.shared
     let profileImageService = ProfileImageService.shared
-    let storage = OAuth2TokenStorage()
+    let storage = OAuth2TokenStorage.shared
     let uiBlockingProgressHUB = UIBlockingProgressHUD()
     private let showAuthIdentifier = "ShowAuth"
     

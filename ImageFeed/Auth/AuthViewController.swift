@@ -14,7 +14,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 final class AuthViewController: UIViewController {
     static let webViewSegueIdentifier = "ShowWebView"
     let oauth2Service = OAuth2Service.shared
-    let storage = OAuth2TokenStorage()
+    let storage = OAuth2TokenStorage.shared
     weak var delegate: AuthViewControllerDelegate?
     private let uiBlockingProgressHUD = UIBlockingProgressHUD()
     
