@@ -37,7 +37,7 @@ final class ImagesListService {
         }
         
         lastLoadedPage += 1
-        guard let url = makeRequest(accessToken: token, url: "/photos?page=\(lastLoadedPage)", httpMethod: .GET) else {
+        guard let url = makeRequest(accessToken: token, url: "/photos?page=\(lastLoadedPage)", httpMethod: .get) else {
             return
         }
         
@@ -86,7 +86,7 @@ final class ImagesListService {
             return
         }
         
-        guard let url = makeRequest(accessToken: token, url: "/photos/\(id)/like", httpMethod: isLike ? .POST : .DELETE) else {
+        guard let url = makeRequest(accessToken: token, url: "/photos/\(id)/like", httpMethod: isLike ? .post : .delete) else {
             return 
         }
         

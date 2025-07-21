@@ -15,9 +15,9 @@ enum NetworkError: Error {
 }
 
 enum HTTPMethod: String {
-    case POST
-    case DELETE
-    case GET
+    case post
+    case delete
+    case get
 }
 
 extension URLSession {

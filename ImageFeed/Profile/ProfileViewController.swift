@@ -31,12 +31,6 @@ final class ProfileViewController: UIViewController {
         window.rootViewController = splashController
     }
     
-    private func onLogout() {
-        profileLogoutService.logout()
-        KeychainWrapper.standard.remove(forKey: "access_token")
-        switchToSplashController()
-    }
-    
     private func showConfirmationAlert() {
         let alert = UIAlertController(
             title: "Пока, пока!",
@@ -54,6 +48,12 @@ final class ProfileViewController: UIViewController {
         alert.addAction(noAction)
 
         present(alert, animated: true, completion: nil)
+    }
+    
+    private func onLogout() {
+        profileLogoutService.logout()
+        KeychainWrapper.standard.remove(forKey: "access_token")
+        switchToSplashController()
     }
     
     private let profileImage: UIImageView = {

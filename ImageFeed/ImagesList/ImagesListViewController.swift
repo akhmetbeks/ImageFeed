@@ -142,21 +142,22 @@ extension ImagesListViewController: UITableViewDataSource {
     }
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        if let date = self.photos[indexPath.row].createdAt {
+        let photo = self.photos[indexPath.row]
+        let image = UIImage(resource: .stub)
+        
+        if let date = photo.createdAt {
             cell.labelViewCell.text = dateFormatter.string(from: date)
         }
         
         cell.labelViewCell.textColor = .white
         cell.labelViewCell.font = .systemFont(ofSize: 13, weight: .regular)
         
-        guard let image = UIImage(named: "Stub"),
-              let url = URL(string: photos[indexPath.row].thumbImageURL) else { return }
-
+        guard let url = URL(string: photo.thumbImageURL) else { return }
+        
         cell.imageViewCell.kf.indicatorType = .activity
         cell.imageViewCell.kf.setImage(with: url, placeholder: image)
         
-        let buttonImageName = self.photos[indexPath.row].isLiked ? "Active" : "No Active"
-        cell.buttonCell.setImage(UIImage(named: buttonImageName), for: .normal)
+        cell.buttonCell.setImage(UIImage(resource: photo.isLiked ? .active : .noActive), for: .normal)
         cell.buttonCell.setTitle(nil, for: .normal)
     }
 }

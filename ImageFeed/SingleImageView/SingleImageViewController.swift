@@ -28,7 +28,7 @@ final class SingleImageViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        guard let image = UIImage(named: "Stub") else { return }
+        let image = UIImage(resource: .stub)
         
         if let fullImageUrl {
             guard let url = URL(string: fullImageUrl) else { return }
