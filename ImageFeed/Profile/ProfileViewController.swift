@@ -9,51 +9,18 @@ import UIKit
 import Kingfisher
 import SwiftKeychainWrapper
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerDelegate: AnyObject {
+    func presentAlert(_ alert: UIAlertController)
+    func showAvatar(_ url: URL)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerDelegate {
     private let service = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    private let profileLogoutService = ProfileLogoutService.shared
-    
-    private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter: ProfilePresenterProtocol?
     
     @objc
     private func buttonTapped() {
-        showConfirmationAlert()
-    }
-    
-    private func switchToSplashController() {
-        guard let window = UIApplication.shared.windows.first else {
-            return
-        }
-        
-        let splashController = SplashViewController()
-        
-        window.rootViewController = splashController
-    }
-    
-    private func showConfirmationAlert() {
-        let alert = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            preferredStyle: .alert
-        )
-
-        let yesAction = UIAlertAction(title: "Да", style: .destructive) { _ in
-            self.onLogout()
-        }
-
-        let noAction = UIAlertAction(title: "Нет", style: .cancel)
-
-        alert.addAction(yesAction)
-        alert.addAction(noAction)
-
-        present(alert, animated: true, completion: nil)
-    }
-    
-    private func onLogout() {
-        profileLogoutService.logout()
-        KeychainWrapper.standard.remove(forKey: "access_token")
-        switchToSplashController()
+        presenter?.showConfirmationAlert()
     }
     
     private let profileImage: UIImageView = {
@@ -66,7 +33,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "Exit"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.addTarget(ProfileViewController.self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -135,18 +102,18 @@ final class ProfileViewController: UIViewController {
             forName: ProfileImageService.didChangeNotification,
             object: nil,
             queue: .main) { [weak self] _ in
-                self?.updateAvatar()
+                guard let self else { return }
+                self.presenter?.updateAvatar()
             }
         
-        updateAvatar()
+        presenter?.updateAvatar()
     }
     
-    private func updateAvatar() {
-        guard
-            let image = profileImageService.userResult?.profileImage.small,
-            let avatar = URL(string: image)
-        else { return }
-        
-        profileImage.kf.setImage(with: avatar, placeholder: UIImage(named: "ProfilePhoto"))
+    func presentAlert(_ alert: UIAlertController) {
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func showAvatar(_ url: URL) {
+        profileImage.kf.setImage(with: url, placeholder: UIImage(named: "ProfilePhoto"))
     }
 }
