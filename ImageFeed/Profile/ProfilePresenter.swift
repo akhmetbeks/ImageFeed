@@ -18,7 +18,7 @@ public protocol ProfilePresenterProtocol {
 final class ProfilePresenter: ProfilePresenterProtocol {
     private let profileLogoutService = ProfileLogoutService.shared
     private let profileImageService = ProfileImageService.shared
-    var view: ProfileViewControllerDelegate?
+    weak var view: ProfileViewControllerDelegate?
     
     func showConfirmationAlert() {
         let alert = UIAlertController(
