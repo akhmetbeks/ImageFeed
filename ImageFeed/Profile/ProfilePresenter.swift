@@ -30,6 +30,8 @@ final class ProfilePresenter: ProfilePresenterProtocol {
         let yesAction = UIAlertAction(title: "Да", style: .destructive) { _ in
             self.logout()
         }
+        
+        yesAction.accessibilityIdentifier = "OK"
 
         let noAction = UIAlertAction(title: "Нет", style: .cancel)
 

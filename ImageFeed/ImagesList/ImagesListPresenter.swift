@@ -84,6 +84,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
             
             if case .success = result {
                 self.photos = self.imagesListService.photos
+                view?.updateLike(at: indexPath, isLiked: isLiked)
             }
             
             self.view?.showLoading(false)

@@ -22,6 +22,7 @@ final class TabBarController: UITabBarController {
         let presenter = ProfilePresenter()
         profileViewController.presenter = presenter
         profileViewController.tabBarItem = UITabBarItem(title: "", image: UIImage(resource: .tabProfileActive), selectedImage: nil)
+        profileViewController.tabBarItem.accessibilityIdentifier = "ProfileTab"
         presenter.view = profileViewController
           
         self.viewControllers = [imagesListViewController, profileViewController]

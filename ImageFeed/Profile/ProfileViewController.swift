@@ -33,7 +33,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerDelega
         let button = UIButton()
         button.setImage(UIImage(named: "Exit"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(ProfileViewController.self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "ExitButton"
         return button
     }()
     

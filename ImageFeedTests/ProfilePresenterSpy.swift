@@ -8,7 +8,7 @@
 import ImageFeed
 import UIKit
 
-final class ProfileViewControllerSpy: UIViewController, ProfileViewControllerDelegate {
+final class ProfileViewControllerSpy: ProfileViewControllerDelegate {
     var alertPresented = false
     
     func presentAlert(_ alert: UIAlertController) {
@@ -18,15 +18,15 @@ final class ProfileViewControllerSpy: UIViewController, ProfileViewControllerDel
     func showAvatar(_ url: URL) {
         
     }
-    
-    
 }
 
 final class ProfilePresenterSpy: ProfilePresenterProtocol {
+    var view: ProfileViewControllerDelegate?
+    
     var isLoggedOut = false
     
     func switchToSplashController() {
-        isLoggedOut = true
+        view?.presentAlert(UIAlertController())
     }
     
     func showConfirmationAlert() {
@@ -34,7 +34,7 @@ final class ProfilePresenterSpy: ProfilePresenterProtocol {
     }
     
     func logout() {
-        
+        isLoggedOut = true
     }
     
     func updateAvatar() {

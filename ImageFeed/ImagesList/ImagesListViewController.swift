@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
+
 public protocol ImagesListViewControllerProtocol: AnyObject {
     func performBatchUpdates(_ indexPaths: [IndexPath])
     func showLoading(_ isLoading: Bool)
@@ -23,6 +27,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
 
         presenter?.viewDidLoad()
@@ -63,6 +68,15 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         } else {
             progress.dismiss()
         }
+    }
+}
+
+// MARK: - ImagesListCellDelegate
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        presenter?.toggleLike(at: indexPath)
     }
 }
 

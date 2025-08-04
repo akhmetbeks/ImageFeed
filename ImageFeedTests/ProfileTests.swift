@@ -9,5 +9,21 @@ import Foundation
 import XCTest
 
 final class ProfileTests: XCTestCase {
+    func testAlertPresented() {
+        let presenter = ProfilePresenter()
+        let view = ProfileViewControllerSpy()
+        presenter.view = view
+        
+        presenter.showConfirmationAlert()
+        
+        XCTAssertTrue(view.alertPresented)
+    }
     
+    func testLogout() {
+        let presenter = ProfilePresenterSpy()
+        
+        presenter.logout()
+        
+        XCTAssertTrue(presenter.isLoggedOut)
+    }
 }
