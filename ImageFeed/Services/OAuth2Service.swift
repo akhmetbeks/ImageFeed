@@ -17,7 +17,7 @@ final class OAuth2Service {
     private init() {}
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest {
-        let baseURL = URL(string: Constants.defaultBaseURL)
+        let baseURL = Constants.defaultBaseURL
         let url = URL(
             string: "/oauth/token"
             + "?client_id=\(Constants.accessKey)"
